@@ -5,6 +5,7 @@ import {
   clearSessionCookie,
   writeSessionCookie,
 } from '@/features/auth/auth.util';
+import { authApi } from './auth.api';
 
 interface AuthState {
   user: AuthUser | null;
@@ -12,6 +13,8 @@ interface AuthState {
   setSession: (accessToken: string) => void;
   setAuthUser: (user: AuthUser) => void;
   clearSession: () => void;
+  isInitializing: boolean;
+  initializeAuth: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -19,6 +22,7 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       accessToken: null,
+      isInitializing: true,
       setSession: (accessToken: string) => {
         writeSessionCookie(accessToken);
         set({ accessToken });
@@ -29,6 +33,20 @@ export const useAuthStore = create<AuthState>()(
       clearSession: () => {
         clearSessionCookie();
         set({ user: null, accessToken: null });
+      },
+      initializeAuth: async () => {
+        try {
+          const res = await authApi.getCurrentUser();
+
+          console.log('Auth initialized with user:', res.data);
+          set({ user: res.data, isInitializing: false });
+        } catch {
+          set({
+            user: null,
+            accessToken: null,
+            isInitializing: false,
+          });
+        }
       },
     }),
     {

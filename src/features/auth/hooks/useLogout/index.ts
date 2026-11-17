@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/features/auth/auth.store';
+import { useRateLimitStore } from '@/features/auth/rate-limit.store';
 
 export function useLogout() {
   const router = useRouter();
@@ -9,6 +10,7 @@ export function useLogout() {
 
   return () => {
     clearSession();
+    useRateLimitStore.getState().clearCooldown();
 
     router.replace('/login');
   };

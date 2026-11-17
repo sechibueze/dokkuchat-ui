@@ -25,6 +25,16 @@ export const authApi = {
         user: { id: string; name: string };
       }>
     >('/auth', input),
+  getCurrentUser: () =>
+    api.get<
+      AuthApiResponse<{
+        id: string;
+        name: string;
+        role: string;
+        tier: string;
+        status: string;
+      }>
+    >('/auth/me'),
   signup: ({ name, email, password }: SignupInput) =>
     api.post('/auth/signup', { name, email, password }),
   forgotPassword: (input: ForgotPasswordInput) =>
