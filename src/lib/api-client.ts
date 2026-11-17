@@ -1,11 +1,11 @@
 import type { ZodType } from 'zod';
 import { env } from '@/lib/env';
-import { useAuthStore } from '@/features/auth/store/auth-store';
+import { useAuthStore } from '@/features/auth/auth.store';
 
 export class ApiError extends Error {
   constructor(
-    public readonly status: number,
     message: string,
+    public readonly status: number,
     public readonly details?: unknown,
   ) {
     super(message);
@@ -45,16 +45,24 @@ export async function apiRequest<TResponse>(
 
   if (!response.ok) {
     const payload = await response.json().catch(() => null);
-    throw new ApiError(
-      response.status,
-      payload?.message ?? response.statusText,
+
+    console.error('API request failed', {
+      path,
+      status: response.status,
+      statusText: response.statusText,
       payload,
+    });
+    throw new ApiError(
+      payload?.error?.message ?? response.statusText,
+      response.status,
+      payload?.error?.details,
     );
   }
 
   if (response.status === 204) return undefined as TResponse;
 
   const json = await response.json();
+
   return schema ? schema.parse(json) : (json as TResponse);
 }
 
