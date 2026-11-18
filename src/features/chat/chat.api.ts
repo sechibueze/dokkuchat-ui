@@ -7,7 +7,7 @@ import {
 } from '@/features/chat/chat.schema';
 
 export const chatApi = {
-  //   listModels: () => api.get('/models', z.array(chatModelSchema)),
+  listModels: () => api.get('/models', z.array(chatModelSchema)),
   listConversations: () =>
     api.get('/conversations', z.array(conversationSchema)),
   createConversation: (title?: string) =>

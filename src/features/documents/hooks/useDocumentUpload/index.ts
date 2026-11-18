@@ -2,7 +2,10 @@
 
 import { useState } from 'react';
 import { documentsApi } from '@/features/documents/document.api';
-import type { PasteTextInput } from '@/features/documents/document.schema';
+import type {
+  DocumentItem,
+  PasteTextInput,
+} from '@/features/documents/document.schema';
 import { useDocumentsStore } from '@/features/documents/document.store';
 import { validateUploadFile } from '@/features/documents/document.util';
 import { getErrorMessage } from '@/lib/errors';
@@ -43,7 +46,7 @@ export function useDocumentUploads(
       for (const file of files) {
         addDocument(
           conversationId,
-          await documentsApi.upload(conversationId, file),
+          (await documentsApi.upload(conversationId, file)) as DocumentItem,
         );
       }
     });
@@ -53,7 +56,10 @@ export function useDocumentUploads(
     runUpload(async (conversationId) => {
       addDocument(
         conversationId,
-        await documentsApi.createFromText(conversationId, input),
+        (await documentsApi.createFromText(
+          conversationId,
+          input,
+        )) as DocumentItem,
       );
     });
 

@@ -29,7 +29,11 @@ export function useConversationDocuments(conversationId?: string) {
     setIsLoading(true);
     documentsApi
       .listForConversation(conversationId)
-      .then((loaded) => !isCancelled && setDocuments(conversationId, loaded))
+      .then(
+        (loaded) =>
+          !isCancelled &&
+          setDocuments(conversationId, loaded as DocumentItem[]),
+      )
       .catch(() => undefined)
       .finally(() => !isCancelled && setIsLoading(false));
 
@@ -50,7 +54,9 @@ export function useConversationDocuments(conversationId?: string) {
     const timer = setInterval(() => {
       documentsApi
         .listForConversation(conversationId)
-        .then((loaded) => setDocuments(conversationId, loaded))
+        .then((loaded) =>
+          setDocuments(conversationId, loaded as DocumentItem[]),
+        )
         .catch(() => undefined);
     }, POLL_INTERVAL_MS);
     return () => clearInterval(timer);

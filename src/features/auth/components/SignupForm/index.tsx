@@ -28,7 +28,7 @@ export function SignupForm() {
     onSubmit: async (input) => {
       const session = await authApi.signup(input);
       console.log('signup session', session);
-      setSession(session);
+      setSession(session as string);
       router.push(DEFAULT_AUTHENTICATED_PATH);
     },
   });

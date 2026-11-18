@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState, type ReactNode } from 'react';
+import { Suspense, useEffect, useState, type ReactNode } from 'react';
 import { Spinner } from '@/components/ui/Spinner';
 import { useAuthStore } from '@/features/auth/auth.store';
 import { Sidebar } from '@/features/navigation/components/Sidebar';
@@ -9,7 +9,7 @@ import { TopBar } from '@/features/navigation/components/Topbar';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { RateLimitBanner } from '@/features/auth/components/RateLimitBanner';
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShellContent({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const isMounted = useIsMounted();
@@ -61,5 +61,13 @@ export function AppShell({ children }: { children: ReactNode }) {
         <main className='min-h-0 flex-1'>{children}</main>
       </div>
     </div>
+  );
+}
+
+export function AppShell({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={<div className='min-h-screen' />}>
+      <AppShellContent>{children}</AppShellContent>
+    </Suspense>
   );
 }

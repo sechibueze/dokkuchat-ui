@@ -6,6 +6,8 @@ import {
   type LoginInput,
   type SignupInput,
   type AuthResponse,
+  UserTier,
+  UserRole,
 } from '@/features/auth/auth.schema';
 
 type ApiResponse<T> = {
@@ -30,8 +32,9 @@ export const authApi = {
       AuthApiResponse<{
         id: string;
         name: string;
-        role: string;
-        tier: string;
+        email: string;
+        role: UserRole;
+        tier: UserTier;
         status: string;
       }>
     >('/auth/me'),

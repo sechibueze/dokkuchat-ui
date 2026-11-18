@@ -6,6 +6,7 @@ export const userTierSchema = z.enum(['free', 'pro', 'enterprise']);
 export const authUserSchema = z.object({
   id: z.string(),
   name: z.string(),
+  email: z.email(),
   role: userRoleSchema,
   tier: userTierSchema,
 });

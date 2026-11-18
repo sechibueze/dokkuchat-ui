@@ -25,7 +25,7 @@ export function UserMenu() {
       {/* pt-2 keeps the hover area continuous between the avatar and the card */}
       <div className='invisible absolute right-0 top-full z-50 pt-2 opacity-0 transition group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100'>
         <div className='w-56 rounded-xl border border-slate-200 bg-white p-3 shadow-lg'>
-          <p className='truncate text-sm font-semibold'>{user.username}</p>
+          <p className='truncate text-sm font-semibold'>{user.name}</p>
           <p className='truncate text-xs text-slate-500'>{user.email}</p>
           <dl className='mt-3 grid grid-cols-2 gap-2 text-xs'>
             <div>
