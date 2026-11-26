@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { chatApi } from '@/features/chat/chat.api';
-import { useChatStore } from '@/features/chat/chat.store';
-import { getErrorMessage } from '@/lib/errors';
-import { isRateLimitActive } from '@/features/auth/rate-limit.store';
-import { RateLimitError } from '@/lib/api-client';
+import { useState } from "react";
+import { chatApi } from "@/features/chat/chat.api";
+import { useChatStore } from "@/features/chat/chat.store";
+import { getErrorMessage } from "@/lib/errors";
+import { isRateLimitActive } from "@/features/auth/rate-limit.store";
+import { RateLimitError } from "@/lib/api-client";
 
 const TITLE_MAX_LENGTH = 60;
 
@@ -32,18 +32,28 @@ export function useSendMessage(
       optimisticMessageId = crypto.randomUUID();
       appendMessage(conversationId, {
         id: optimisticMessageId,
-        role: 'user',
+        role: "user",
         content,
-        sources: [],
+        citations: [],
         createdAt: new Date().toISOString(),
       });
       setAwaitingReply(conversationId, true);
 
       const modelId = useChatStore.getState().selectedModelId ?? undefined;
-      appendMessage(
-        conversationId,
-        await chatApi.sendMessage(conversationId, { content, modelId }),
-      );
+      const res = await chatApi.sendMessage(conversationId, {
+        content,
+        modelId,
+      });
+
+      console.log(res);
+      const assistantMessage = res.data.assistantMessage;
+      appendMessage(conversationId, {
+        id: optimisticMessageId,
+        role: assistantMessage.role.toLowerCase() as "assistant",
+        content: assistantMessage.content,
+        citations: [],
+        createdAt: new Date().toISOString(),
+      });
       return true;
     } catch (error) {
       if (conversationId && optimisticMessageId)

@@ -1,25 +1,49 @@
-import { z } from 'zod';
-import { api } from '@/lib/api-client';
+import { z } from "zod";
+import { api } from "@/lib/api-client";
 import {
   chatModelSchema,
+  Conversation,
   conversationSchema,
+  Message,
   messageSchema,
-} from '@/features/chat/chat.schema';
+} from "@/features/chat/chat.schema";
 
 export const chatApi = {
-  listModels: () => api.get('/models', z.array(chatModelSchema)),
+  listModels: () =>
+    api.get<{ data: z.infer<typeof chatModelSchema>[] }>(
+      "/models", //z.array(chatModelSchema)
+    ),
   listConversations: () =>
-    api.get('/conversations', z.array(conversationSchema)),
+    api.get<{ data: Conversation[] }>(
+      "/conversations", //z.array(conversationSchema)
+    ),
   createConversation: (title?: string) =>
-    api.post('/conversations', { title }, conversationSchema),
+    api.post<{ data: { id: string; title: string } }>(
+      "/conversations",
+      { title }, //conversationSchema
+    ),
   listMessages: (conversationId: string) =>
-    api.get(
+    api.get<{ data: Message[] }>(
       `/conversations/${conversationId}/messages`,
-      z.array(messageSchema),
+      // z.array(messageSchema),
     ),
   sendMessage: (
     conversationId: string,
     input: { content: string; modelId?: string },
   ) =>
-    api.post(`/conversations/${conversationId}/messages`, input, messageSchema),
+    api.post<{
+      data: {
+        assistantMessage: {
+          id: string;
+          content: string;
+          citations: {
+            documentName: string;
+          }[];
+          role: "ASSISTANT";
+        };
+      };
+    }>(
+      `/conversations/${conversationId}/messages`,
+      input, //messageSchema
+    ),
 };

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { chatApi } from '@/features/chat/chat.api';
-import type { Message } from '@/features/chat/chat.schema';
-import { useChatStore } from '@/features/chat/chat.store';
-import { getErrorMessage } from '@/lib/errors';
+import { useEffect, useState } from "react";
+import { chatApi } from "@/features/chat/chat.api";
+import type { Message } from "@/features/chat/chat.schema";
+import { useChatStore } from "@/features/chat/chat.store";
+import { getErrorMessage } from "@/lib/errors";
 
 const EMPTY_MESSAGES: Message[] = [];
 
@@ -31,9 +31,12 @@ export function useConversationMessages(conversationId?: string) {
 
     let isCancelled = false;
     setIsLoading(true);
+
     chatApi
       .listMessages(conversationId)
-      .then((loaded) => !isCancelled && setMessages(conversationId, loaded))
+      .then(
+        (loaded) => !isCancelled && setMessages(conversationId, loaded.data),
+      )
       .catch((error) => !isCancelled && setErrorMessage(getErrorMessage(error)))
       .finally(() => !isCancelled && setIsLoading(false));
 

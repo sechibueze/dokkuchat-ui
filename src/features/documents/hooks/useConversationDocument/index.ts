@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { documentsApi } from '@/features/documents/document.api';
-import type { DocumentItem } from '@/features/documents/document.schema';
-import { useDocumentsStore } from '@/features/documents/document.store';
-import { isRateLimitActive } from '@/features/auth/rate-limit.store';
+import { useEffect, useState } from "react";
+import { documentsApi } from "@/features/documents/document.api";
+import type { DocumentItem } from "@/features/documents/document.schema";
+import { useDocumentsStore } from "@/features/documents/document.store";
+import { isRateLimitActive } from "@/features/auth/rate-limit.store";
 
 const EMPTY_DOCUMENTS: DocumentItem[] = [];
 const POLL_INTERVAL_MS = 4000;
@@ -30,9 +30,7 @@ export function useConversationDocuments(conversationId?: string) {
     documentsApi
       .listForConversation(conversationId)
       .then(
-        (loaded) =>
-          !isCancelled &&
-          setDocuments(conversationId, loaded as DocumentItem[]),
+        (loaded) => !isCancelled && setDocuments(conversationId, loaded.data),
       )
       .catch(() => undefined)
       .finally(() => !isCancelled && setIsLoading(false));
@@ -45,7 +43,7 @@ export function useConversationDocuments(conversationId?: string) {
   // Ingestion is asynchronous, so poll while any document is still being processed.
   const hasPendingDocuments = documents.some(
     (document) =>
-      document.status === 'uploaded' || document.status === 'processing',
+      document.status === "uploaded" || document.status === "processing",
   );
 
   useEffect(() => {
@@ -55,7 +53,7 @@ export function useConversationDocuments(conversationId?: string) {
       documentsApi
         .listForConversation(conversationId)
         .then((loaded) =>
-          setDocuments(conversationId, loaded as DocumentItem[]),
+          setDocuments(conversationId, loaded.data as DocumentItem[]),
         )
         .catch(() => undefined);
     }, POLL_INTERVAL_MS);

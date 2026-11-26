@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { chatApi } from '@/features/chat/chat.api';
-import { useChatStore } from '@/features/chat/chat.store';
+import { useEffect, useState } from "react";
+import { chatApi } from "@/features/chat/chat.api";
+import { useChatStore } from "@/features/chat/chat.store";
 
 export function useConversations() {
   const conversations = useChatStore((state) => state.conversations);
@@ -13,7 +13,7 @@ export function useConversations() {
     let isCancelled = false;
     chatApi
       .listConversations()
-      .then((loaded) => !isCancelled && setConversations(loaded))
+      .then((loaded) => !isCancelled && setConversations(loaded.data))
       .catch(() => undefined)
       .finally(() => !isCancelled && setIsLoading(false));
     return () => {
@@ -21,5 +21,5 @@ export function useConversations() {
     };
   }, [setConversations]);
 
-  return { conversations, isLoading };
+  return { conversations: conversations, isLoading };
 }

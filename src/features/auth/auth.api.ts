@@ -1,5 +1,5 @@
-import { api } from '@/lib/api-client';
-import { env } from '@/lib/env';
+import { api } from "@/lib/api-client";
+import { env } from "@/lib/env";
 import {
   authResponseSchema,
   type ForgotPasswordInput,
@@ -8,7 +8,7 @@ import {
   type AuthResponse,
   UserTier,
   UserRole,
-} from '@/features/auth/auth.schema';
+} from "@/features/auth/auth.schema";
 
 type ApiResponse<T> = {
   status: boolean;
@@ -26,7 +26,7 @@ export const authApi = {
         accessToken: string;
         user: { id: string; name: string };
       }>
-    >('/auth', input),
+    >("/auth/login", input),
   getCurrentUser: () =>
     api.get<
       AuthApiResponse<{
@@ -37,10 +37,10 @@ export const authApi = {
         tier: UserTier;
         status: string;
       }>
-    >('/auth/me'),
+    >("/users/me"),
   signup: ({ name, email, password }: SignupInput) =>
-    api.post('/auth/signup', { name, email, password }),
+    api.post("/auth/signup", { name, email, password }),
   forgotPassword: (input: ForgotPasswordInput) =>
-    api.post<void>('/auth/forgot-password', input),
+    api.post<void>("/auth/forgot-password", input),
   googleLoginUrl: `${env.NEXT_PUBLIC_API_URL}/auth/google`,
 };
