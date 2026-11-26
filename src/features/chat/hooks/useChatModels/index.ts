@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { chatApi } from '@/features/chat/chat.api';
-import { useChatStore } from '@/features/chat/chat.store';
+import { useEffect } from "react";
+import { chatApi } from "@/features/chat/chat.api";
+import { useChatStore } from "@/features/chat/chat.store";
 
 export function useChatModels() {
   const models = useChatStore((state) => state.models);
@@ -14,7 +14,7 @@ export function useChatModels() {
     if (useChatStore.getState().models.length > 0) return;
     chatApi
       .listModels()
-      .then(setModels)
+      .then((model) => setModels(model.data))
       .catch(() => undefined);
   }, [setModels]);
 

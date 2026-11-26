@@ -1,21 +1,22 @@
-import { api } from '@/lib/api-client';
+import { api } from "@/lib/api-client";
 import {
+  DocumentItem,
   documentSchema,
   type PasteTextInput,
-} from '@/features/documents/document.schema';
+} from "@/features/documents/document.schema";
 
 export const documentsApi = {
   listForConversation: (conversationId: string) =>
-    api.get(
-      `/conversations/${conversationId}/documents`,
+    api.get<{ data: DocumentItem[] }>(
+      `/documents`,
       //   z.array(documentSchema),
     ),
 
   upload: (conversationId: string, file: File) => {
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("files", file);
     return api.post(
-      `/conversations/${conversationId}/documents`,
+      `/documents`,
       formData,
       //   documentSchema,
     );

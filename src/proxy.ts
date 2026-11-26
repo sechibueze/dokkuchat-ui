@@ -1,11 +1,11 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from "next/server";
 import {
   AUTH_COOKIE_NAME,
   DEFAULT_AUTHENTICATED_PATH,
-} from '@/features/auth/constant';
+} from "@/features/auth/constant";
 
-const PROTECTED_PREFIXES = ['/chat', '/dashboard', '/settings', '/admin'];
-const AUTH_PAGES = ['/login', '/signup', '/forgot-password'];
+const PROTECTED_PREFIXES = ["/chat", "/dashboard", "/settings", "/admin"];
+const AUTH_PAGES = ["/login", "/signup", "/forgot-password"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -14,9 +14,10 @@ export function proxy(request: NextRequest) {
   const isProtected = PROTECTED_PREFIXES.some((prefix) =>
     pathname.startsWith(prefix),
   );
+
   if (isProtected && !hasSession) {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('next', pathname);
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -31,12 +32,12 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/chat/:path*',
-    '/dashboard/:path*',
-    '/settings/:path*',
-    '/admin/:path*',
-    '/login',
-    '/signup',
-    '/forgot-password',
+    "/chat/:path*",
+    "/dashboard/:path*",
+    "/settings/:path*",
+    "/admin/:path*",
+    "/login",
+    "/signup",
+    "/forgot-password",
   ],
 };
